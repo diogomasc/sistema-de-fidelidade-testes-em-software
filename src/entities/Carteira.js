@@ -1,5 +1,4 @@
 import { MULTIPLICADOR_PONTOS } from '../consts/index.js';
-import { multiplicadorValido } from '../utils/index.js';
 
 /**
  * Classe Carteira
@@ -85,18 +84,6 @@ export class Carteira {
       throw new Error('A quantidade de pontos a adicionar deve ser maior que zero');
     }
     this.pontos += pontos;
-  }
-
-  /**
-   * Aplica um bônus multiplicando os pontos atuais
-   * @param {number} multiplicador - Multiplicador do bônus
-   * @throws {Error} Se o multiplicador não for válido (não estiver nas constantes)
-   */
-  aplicarBonus(multiplicador) {
-    if (!multiplicadorValido(multiplicador)) {
-      throw new Error(`Multiplicador inválido. Multiplicadores válidos: ${Object.values(MULTIPLICADOR_PONTOS).join(', ')}`);
-    }
-    this.pontos = this.pontos * multiplicador;
   }
 
   /**
