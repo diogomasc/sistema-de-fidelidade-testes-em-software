@@ -1,4 +1,5 @@
 import { MULTIPLICADOR_PONTOS } from '../consts/index.js';
+import { multiplicadorValido } from '../utils/index.js';
 
 /**
  * Classe Carteira
@@ -92,7 +93,6 @@ export class Carteira {
    * @throws {Error} Se o multiplicador não for válido (não estiver nas constantes)
    */
   aplicarBonus(multiplicador) {
-    const { multiplicadorValido } = require('../utils/index.js');
     if (!multiplicadorValido(multiplicador)) {
       throw new Error(`Multiplicador inválido. Multiplicadores válidos: ${Object.values(MULTIPLICADOR_PONTOS).join(', ')}`);
     }

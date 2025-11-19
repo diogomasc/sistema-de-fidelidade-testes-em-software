@@ -16,9 +16,19 @@ export class Cliente {
   /**
    * Registra uma compra e adiciona pontos à carteira
    * @param {number} valorCompra - Valor da compra em reais
+   * @param {number} [descontoPromocional] - Desconto promocional (ex: 1.2 para 20% de desconto)
    */
-  registrarCompra(valorCompra) {
-    this.carteira.adicionarPontos(valorCompra);
+  registrarCompra(valorCompra, descontoPromocional = null) {
+    let valorFinal = valorCompra;
+    
+    if (descontoPromocional !== null && descontoPromocional > 0) {
+      // Aplica desconto: se descontoPromocional = 1.2, significa 20% de desconto
+      // valorFinal = valorCompra * (1 - (descontoPromocional - 1))
+      // valorFinal = valorCompra * (2 - descontoPromocional)
+      valorFinal = valorCompra * (2 - descontoPromocional);
+    }
+    
+    this.carteira.adicionarPontos(valorFinal);
   }
 
   /**
@@ -46,11 +56,12 @@ export class Cliente {
   }
 
   /**
-   * Aplica bônus promocional multiplicando os pontos atuais
-   * @param {number} multiplicador - Multiplicador do bônus (ex: 1.2 para 20% de bônus)
+   * Aplica bônus promocional na próxima compra (desconto)
+   * @param {number} valorCompra - Valor da compra em reais
+   * @param {number} descontoPromocional - Desconto promocional (ex: 1.2 para 20% de desconto)
    */
-  aplicarBonusPromocional(multiplicador) {
-    this.carteira.aplicarBonus(multiplicador);
+  aplicarBonusPromocional(valorCompra, descontoPromocional) {
+    this.registrarCompra(valorCompra, descontoPromocional);
   }
 
   /**

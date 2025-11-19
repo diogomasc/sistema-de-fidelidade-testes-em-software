@@ -1,4 +1,5 @@
 import { Cliente } from '../entities/Cliente.js';
+import { clienteExiste } from '../utils/index.js';
 
 /**
  * Classe ClienteRepository
@@ -21,10 +22,15 @@ export class ClienteRepository {
   /**
    * Busca um cliente pelo nome
    * @param {string} nome - Nome do cliente
-   * @returns {Cliente|null} Cliente encontrado ou null
+   * @returns {Cliente} Cliente encontrado
+   * @throws {Error} Se o cliente não for encontrado
    */
   buscarPorNome(nome) {
-    return this.clientes.find(cliente => cliente.nome === nome) || null;
+    const cliente = this.clientes.find(cliente => cliente.nome === nome) || null;
+    if (!clienteExiste(cliente)) {
+      throw new Error(`Cliente não encontrado: ${nome}`);
+    }
+    return cliente;
   }
 
   /**
@@ -38,15 +44,19 @@ export class ClienteRepository {
   /**
    * Remove um cliente do repositório
    * @param {Cliente} cliente - Cliente a ser removido
-   * @returns {boolean} true se removido, false caso contrário
+   * @throws {Error} Se o cliente não for encontrado no repositório
    */
   remover(cliente) {
-    const index = this.clientes.indexOf(cliente);
-    if (index > -1) {
-      this.clientes.splice(index, 1);
-      return true;
+    if (!clienteExiste(cliente)) {
+      throw new Error('Cliente não pode ser removido: cliente inválido');
     }
-    return false;
+    
+    const index = this.clientes.indexOf(cliente);
+    if (index === -1) {
+      throw new Error(`Cliente não encontrado no repositório: ${cliente.nome}`);
+    }
+    
+    this.clientes.splice(index, 1);
   }
 
   /**
