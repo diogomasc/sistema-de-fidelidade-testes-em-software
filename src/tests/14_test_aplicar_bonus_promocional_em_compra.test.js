@@ -14,5 +14,15 @@ describe('test_aplicar_bonus_promocional_em_compra', () => {
     // Cliente padrão: 1 ponto por real, então 80 pontos
     expect(cliente.consultarPontos()).toBe(80);
   });
+
+  it('deve lançar erro ao aplicar bônus promocional igual a 0', () => {
+    const cliente = new Cliente('Maria', TIPOS_CLIENTE.PREMIUM);
+    expect(() => cliente.registrarCompra(100, 0)).toThrow('Desconto promocional deve estar entre 0.01 (1%) e menor que 1.0 (100%)');
+  });
+
+  it('deve lançar erro ao aplicar bônus promocional igual a 1', () => {
+    const cliente = new Cliente('Pedro', TIPOS_CLIENTE.VIP);
+    expect(() => cliente.registrarCompra(100, 1)).toThrow('Desconto promocional deve estar entre 0.01 (1%) e menor que 1.0 (100%)');
+  });
 });
 
