@@ -1,0 +1,23 @@
+{
+  "name": "sistema-de-fedelidade",
+  "version": "1.0.0",
+  "description": "Este projeto implementa um sistema de gerenciamento de pontos de fidelidade para clientes, focado em qualidade de software com TDD — Test Driven Development. O objetivo principal é permitir a prática de TDD aplicando testes à camada de negócio, utilizando arquitetura Repository Pattern simplificada, e operando apenas com dados em memória (sem banco de dados ou interface gráfica).",
+  "main": "index.js",
+  "scripts": {
+    "dev": "node src/app.js",
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "coverage": "vitest run --coverage",
+    "coverage:ui": "start ./coverage/index.html"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "@faker-js/faker": "^10.1.0",
+    "@vitest/coverage-v8": "^4.0.10",
+    "@vitest/ui": "^4.0.10",
+    "vitest": "^4.0.10"
+  }
+}
