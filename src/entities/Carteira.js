@@ -11,15 +11,24 @@ export class Carteira {
   }
 
   /**
+   * Calcula o multiplicador de pontos baseado no tipo de cliente
+   * @returns {number} Multiplicador de pontos
+   */
+  calcularMultiplicador() {
+    return MULTIPLICADOR_PONTOS[this.tipoCliente];
+  }
+
+  /**
    * Adiciona pontos à carteira baseado no valor da compra
    * @param {number} valorCompra - Valor da compra em reais
+   * @throws {Error} Se o valor da compra for menor ou igual a zero
    */
   adicionarPontos(valorCompra) {
     if (valorCompra <= 0) {
-      return;
+      throw new Error('O valor da compra deve ser maior que zero');
     }
 
-    const multiplicador = MULTIPLICADOR_PONTOS[this.tipoCliente];
+    const multiplicador = this.calcularMultiplicador();
     const pontosGanhos = valorCompra * multiplicador;
     this.pontos += pontosGanhos;
   }
@@ -33,17 +42,33 @@ export class Carteira {
   }
 
   /**
+   * Calcula os pontos efetivamente resgatados
+   * @param {number} pontosResgatar - Quantidade de pontos solicitados
+   * @returns {number} Pontos efetivamente resgatados
+   */
+  calcularPontosEfetivamenteResgatados(pontosResgatar) {
+    const pontosDisponiveis = this.pontos;
+    return Math.min(pontosResgatar, pontosDisponiveis);
+  }
+
+  /**
    * Resgata pontos da carteira
    * @param {number} pontosResgatar - Quantidade de pontos a resgatar
    * @returns {number} Pontos efetivamente resgatados
+   * @throws {Error} Se os pontos a resgatar forem menores ou iguais a zero
+   * @throws {Error} Se os pontos a resgatar forem maiores que os disponíveis
    */
   resgatarPontos(pontosResgatar) {
     if (pontosResgatar <= 0) {
-      return 0;
+      throw new Error('A quantidade de pontos a resgatar deve ser maior que zero');
     }
 
-    const pontosDisponiveis = this.pontos;
-    const pontosEfetivamenteResgatados = Math.min(pontosResgatar, pontosDisponiveis);
+    const pontosEfetivamenteResgatados = this.calcularPontosEfetivamenteResgatados(pontosResgatar);
+    
+    if (pontosResgatar > this.pontos) {
+      throw new Error(`Saldo insuficiente. Pontos disponíveis: ${this.pontos}, pontos solicitados: ${pontosResgatar}`);
+    }
+
     this.pontos -= pontosEfetivamenteResgatados;
 
     return pontosEfetivamenteResgatados;
@@ -52,28 +77,37 @@ export class Carteira {
   /**
    * Adiciona pontos diretamente à carteira (sem cálculo por compra)
    * @param {number} pontos - Quantidade de pontos a adicionar
+   * @throws {Error} Se os pontos forem menores ou iguais a zero
    */
   adicionarPontosDiretos(pontos) {
-    if (pontos > 0) {
-      this.pontos += pontos;
+    if (pontos <= 0) {
+      throw new Error('A quantidade de pontos a adicionar deve ser maior que zero');
     }
+    this.pontos += pontos;
   }
 
   /**
    * Aplica um bônus multiplicando os pontos atuais
    * @param {number} multiplicador - Multiplicador do bônus
+   * @throws {Error} Se o multiplicador não for válido (não estiver nas constantes)
    */
   aplicarBonus(multiplicador) {
-    if (multiplicador > 0) {
-      this.pontos = this.pontos * multiplicador;
+    const { multiplicadorValido } = require('../utils/index.js');
+    if (!multiplicadorValido(multiplicador)) {
+      throw new Error(`Multiplicador inválido. Multiplicadores válidos: ${Object.values(MULTIPLICADOR_PONTOS).join(', ')}`);
     }
+    this.pontos = this.pontos * multiplicador;
   }
 
   /**
    * Remove pontos da carteira (para expiração)
    * @param {number} pontosRemover - Quantidade de pontos a remover
+   * @throws {Error} Se os pontos a remover forem maiores que os disponíveis
    */
   removerPontos(pontosRemover) {
+    if (pontosRemover > this.pontos) {
+      throw new Error(`Não é possível remover mais pontos do que o disponível. Pontos disponíveis: ${this.pontos}, pontos a remover: ${pontosRemover}`);
+    }
     if (pontosRemover > 0) {
       this.pontos = Math.max(0, this.pontos - pontosRemover);
     }
