@@ -97,17 +97,17 @@ Componentes principais:
 
 ## Checklist de Tarefas — 4 Semanas
 
-- [ ] Setup do projeto Node.js v22, Vitest/UI, configurações básicas (`app.js`, dependências)
-- [ ] Implementar estrutura de pastas e arquivos básicos
-- [ ] Definir tipos de cliente, regras e permissões (`consts`, `database`)
-- [ ] Criar as estruturas em memória (listas, objetos de clientes)
-- [ ] Escrever testes TDD para regras básica de pontos
-- [ ] Implementar métodos de cálculo
-- [ ] Testar consultas e operações em listas (adicionar/filtrar/ordenar/remover)
-- [ ] Escrever testes de resgate de pontos e bonificações
-- [ ] Validar tratamento de exceções: clientes inexistentes, saldo insuficiente, valores inválidos
-- [ ] Refatoração baseada nos testes — de acordo com TDD
-- [ ] Checklist de casos de teste (ver lista abaixo)
+- [x] Setup do projeto Node.js v22, Vitest/UI, configurações básicas (`app.js`, dependências)
+- [x] Implementar estrutura de pastas e arquivos básicos
+- [x] Definir tipos de cliente, regras e permissões (`consts`, `database`)
+- [x] Criar as estruturas em memória (listas, objetos de clientes)
+- [x] Escrever testes TDD para regras básica de pontos
+- [x] Implementar métodos de cálculo
+- [x] Testar consultas e operações em listas (adicionar/filtrar/ordenar/remover)
+- [x] Escrever testes de resgate de pontos e bonificações
+- [x] Validar tratamento de exceções: clientes inexistentes, saldo insuficiente, valores inválidos
+- [x] Refatoração baseada nos testes — de acordo com TDD
+- [x] Checklist de casos de teste (ver lista abaixo)
 - [ ] Preparar relatório e cobertura de testes
 - [ ] Revisão final do código e documentação
 
