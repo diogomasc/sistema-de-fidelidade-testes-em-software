@@ -16,23 +16,31 @@ export class Cliente {
   /**
    * Registra uma compra e adiciona pontos à carteira
    * @param {number} valorCompra - Valor da compra em reais
-   * @param {number} [descontoPromocional] - Desconto promocional em decimal (ex: 0.1 para 10%, 0.2 para 20%, até 0.99 para 99%)
-   * @throws {Error} Se o desconto promocional estiver fora do range válido (0.01 a menor que 1.0)
+   * @param {number} [descontoPromocional] - Desconto promocional em decimal (ex: 0.1 para 10%, 0.2 para 20%, até 1.0 para 100% - produto grátis)
+   * @throws {Error} Se o desconto promocional estiver fora do range válido (0.01 a 1.0)
    */
   registrarCompra(valorCompra, descontoPromocional = null) {
+    // Valida valor da compra antes de processar desconto
+    if (valorCompra <= 0) {
+      throw new Error('O valor da compra deve ser maior que zero');
+    }
+    
     let valorFinal = valorCompra;
     
     if (descontoPromocional !== null) {
-      // Valida range do desconto: deve estar entre 0.01 e menor que 1.0 (não inclui 1.0)
-      if (descontoPromocional <= 0 || descontoPromocional >= 1.0) {
-        throw new Error('Desconto promocional deve estar entre 0.01 (1%) e menor que 1.0 (100%)');
+      // Valida range do desconto: deve estar entre 0.01 e 1.0 (inclui 1.0 para produto grátis)
+      if (descontoPromocional <= 0 || descontoPromocional > 1.0) {
+        throw new Error('Desconto promocional deve estar entre 0.01 (1%) e 1.0 (100%)');
       }
       
       // Calcula valor final com desconto: precoFinal = precoOriginal * (1 - taxaDeDesconto)
       valorFinal = valorCompra * (1 - descontoPromocional);
     }
     
-    this.carteira.adicionarPontos(valorFinal);
+    // Se o valor final for maior que zero, adiciona pontos (produto grátis não gera pontos)
+    if (valorFinal > 0) {
+      this.carteira.adicionarPontos(valorFinal);
+    }
   }
 
   /**

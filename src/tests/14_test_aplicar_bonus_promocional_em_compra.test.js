@@ -17,12 +17,15 @@ describe('test_aplicar_bonus_promocional_em_compra', () => {
 
   it('deve lançar erro ao aplicar bônus promocional igual a 0', () => {
     const cliente = new Cliente('Maria', TIPOS_CLIENTE.PREMIUM);
-    expect(() => cliente.registrarCompra(100, 0)).toThrow('Desconto promocional deve estar entre 0.01 (1%) e menor que 1.0 (100%)');
+    expect(() => cliente.registrarCompra(100, 0)).toThrow('Desconto promocional deve estar entre 0.01 (1%) e 1.0 (100%)');
   });
 
-  it('deve lançar erro ao aplicar bônus promocional igual a 1', () => {
+  it('deve permitir aplicar bônus promocional igual a 1 (produto grátis)', () => {
     const cliente = new Cliente('Pedro', TIPOS_CLIENTE.VIP);
-    expect(() => cliente.registrarCompra(100, 1)).toThrow('Desconto promocional deve estar entre 0.01 (1%) e menor que 1.0 (100%)');
+    cliente.registrarCompra(100, 1.0); // 100% de desconto: 100 * (1 - 1.0) = 0
+    
+    // Produto grátis, então não gera pontos
+    expect(cliente.consultarPontos()).toBe(0);
   });
 });
 

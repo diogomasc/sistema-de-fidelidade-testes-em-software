@@ -45,25 +45,28 @@ describe('Exceções - Entradas Negativas ou Igual a Zero', () => {
   // Teste: desconto promocional menor que 0
   it('deve lançar erro ao aplicar desconto promocional menor que 0', () => {
     const cliente = new Cliente('Ana', TIPOS_CLIENTE.PADRAO);
-    expect(() => cliente.registrarCompra(100, -0.1)).toThrow('Desconto promocional deve estar entre 0.01 (1%) e menor que 1.0 (100%)');
+    expect(() => cliente.registrarCompra(100, -0.1)).toThrow('Desconto promocional deve estar entre 0.01 (1%) e 1.0 (100%)');
   });
 
   // Teste: desconto promocional igual a 0
   it('deve lançar erro ao aplicar desconto promocional igual a 0', () => {
     const cliente = new Cliente('Carlos', TIPOS_CLIENTE.PREMIUM);
-    expect(() => cliente.registrarCompra(100, 0)).toThrow('Desconto promocional deve estar entre 0.01 (1%) e menor que 1.0 (100%)');
+    expect(() => cliente.registrarCompra(100, 0)).toThrow('Desconto promocional deve estar entre 0.01 (1%) e 1.0 (100%)');
   });
 
   // Teste: desconto promocional maior que 1.0
   it('deve lançar erro ao aplicar desconto promocional maior que 1.0', () => {
     const cliente = new Cliente('Pedro', TIPOS_CLIENTE.VIP);
-    expect(() => cliente.registrarCompra(100, 1.5)).toThrow('Desconto promocional deve estar entre 0.01 (1%) e menor que 1.0 (100%)');
+    expect(() => cliente.registrarCompra(100, 1.5)).toThrow('Desconto promocional deve estar entre 0.01 (1%) e 1.0 (100%)');
   });
 
-  // Teste: desconto promocional igual a 1.0 (100% - não permitido)
-  it('deve lançar erro ao aplicar desconto promocional igual a 1.0', () => {
+  // Teste: desconto promocional igual a 1.0 (100% - produto grátis, permitido)
+  it('deve permitir aplicar desconto promocional igual a 1.0 (produto grátis)', () => {
     const cliente = new Cliente('João', TIPOS_CLIENTE.PADRAO);
-    expect(() => cliente.registrarCompra(100, 1.0)).toThrow('Desconto promocional deve estar entre 0.01 (1%) e menor que 1.0 (100%)');
+    cliente.registrarCompra(100, 1.0); // 100% de desconto: 100 * (1 - 1.0) = 0
+    
+    // Produto grátis, então não gera pontos
+    expect(cliente.consultarPontos()).toBe(0);
   });
 
   // Teste: desconto promocional válido (0.1 = 10%)
