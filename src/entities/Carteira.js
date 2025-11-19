@@ -5,9 +5,9 @@ import { MULTIPLICADOR_PONTOS } from '../consts/index.js';
  * Encapsula a lógica de gerenciamento de pontos de um cliente
  */
 export class Carteira {
-  constructor(tipoCliente) {
+  constructor(tipoCliente, pontosIniciais = 0) {
     this.tipoCliente = tipoCliente;
-    this.pontos = 0;
+    this.pontos = pontosIniciais;
   }
 
   /**

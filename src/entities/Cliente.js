@@ -6,10 +6,10 @@ import { Carteira } from './Carteira.js';
  * Encapsula as regras de negócio relacionadas ao cliente
  */
 export class Cliente {
-  constructor(nome, tipoCliente) {
+  constructor(nome, tipoCliente, pontosIniciais = 0) {
     this.nome = nome;
     this.tipoCliente = tipoCliente;
-    this.carteira = new Carteira(tipoCliente);
+    this.carteira = new Carteira(tipoCliente, pontosIniciais);
   }
 
   /**
