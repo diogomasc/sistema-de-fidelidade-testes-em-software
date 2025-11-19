@@ -18,6 +18,14 @@ Uma empresa precisa de um sistema para calcular e gerenciar pontos de fidelidade
 - **Vitest / Vitest UI** (testes automatizados)
 - \*_Sem banco de dados — apenas estruturas de dados_
 
+## Comandos Básicos e Como Rodar
+
+- **Instalar dependências:** `npm install`
+- **Executar testes:** `npm run test`
+- **Executar testes com interface gráfica (Vitest UI):** `npm run test:ui`
+- **Executar cobertura de testes:** `npm run coverage`
+- **Executar cobertura de testes com interface gráfica:** `npm run coverage:ui`
+
 ## Estrutura do Projeto
 
 A arquitetura foi organizada à luz de um **DDD enxuto**, priorizando a separação de responsabilidades e a rastreabilidade das regras de negócio. A ideia é que qualquer nova regra se concentre primeiro na camada de domínio (`entities`), seja orquestrada pelo repositório e validada pelos testes.
@@ -54,14 +62,6 @@ Componentes principais:
 - **`src/utils/`** — Funções puras (cálculos e validações) compartilhadas entre entidades e repositório para sustentar o princípio de responsabilidade única.
 - **`src/consts/`** — Catálogo de elementos estáticos do domínio (tipos de cliente, multiplicadores, pontos de boas-vindas). Serve como “ubiquitous language” do projeto.
 - **`src/tests/`** — Suíte completa de testes unitários organizada por caso de uso. Todos os 23 testes obrigatórios foram isolados em arquivos individuais numerados, e arquivos extras cobrem cenários de exceção e regressões.
-
-## Comandos Básicos
-
-- **Instalar dependências:** `npm install`
-- **Executar testes:** `npm run test`
-- **Executar testes com interface gráfica (Vitest UI):** `npm run test:ui`
-- **Executar cobertura de testes:** `npm run coverage`
-- **Executar cobertura de testes com interface gráfica:** `npm run coverage:ui`
 
 ## Regras Básicas de Pontuação
 
@@ -194,6 +194,10 @@ Componentes principais:
        Gerar ranking dos clientes ordenado por pontuação decrescente
 
 **Status**: ✅ Todos os 23 testes obrigatórios implementados e passando. Cobertura de código: **100%**.
+
+<img width="1505" height="815" alt="image" src="https://github.com/user-attachments/assets/c07f1d5d-074e-4989-96fe-8f8eeec77377" />
+
+<img width="1505" height="815" alt="image" src="https://github.com/user-attachments/assets/2825aa2d-2313-499c-b07c-27b7f080fcea" />
 
 ---
 
