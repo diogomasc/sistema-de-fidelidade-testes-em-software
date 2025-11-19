@@ -7,10 +7,12 @@ describe('test_impedir_resgate_com_saldo_insuficiente', () => {
   it('deve impedir resgate com saldo insuficiente', () => {
     const cliente = new Cliente('Maria', TIPOS_CLIENTE.PREMIUM);
     cliente.registrarCompra(100); // 150 pontos
-    const pontosResgatados = cliente.resgatarPontos(200); // Tentando resgatar mais do que tem
     
-    expect(pontosResgatados).toBe(150); // Deve resgatar apenas o disponível
-    expect(cliente.consultarPontos()).toBe(0);
+    // Tentando resgatar mais do que tem deve lançar erro
+    expect(() => cliente.resgatarPontos(200)).toThrow('Saldo insuficiente');
+    
+    // Pontos devem permanecer intactos
+    expect(cliente.consultarPontos()).toBe(150);
   });
 });
 

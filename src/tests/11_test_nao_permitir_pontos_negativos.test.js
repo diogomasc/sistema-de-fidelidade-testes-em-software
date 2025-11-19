@@ -8,7 +8,9 @@ describe('test_nao_permitir_pontos_negativos', () => {
     const cliente = new Cliente('Pedro', TIPOS_CLIENTE.VIP);
     cliente.registrarCompra(100); // 200 pontos
     cliente.resgatarPontos(200);
-    cliente.resgatarPontos(50); // Tentando resgatar mais do que tem
+    
+    // Tentando resgatar mais do que tem deve lançar erro
+    expect(() => cliente.resgatarPontos(50)).toThrow('Saldo insuficiente');
     
     expect(cliente.consultarPontos()).toBe(0);
     expect(cliente.consultarPontos()).toBeGreaterThanOrEqual(0);

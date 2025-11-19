@@ -22,10 +22,13 @@ export class Cliente {
     let valorFinal = valorCompra;
     
     if (descontoPromocional !== null && descontoPromocional > 0) {
-      // Aplica desconto: se descontoPromocional = 1.2, significa 20% de desconto
-      // valorFinal = valorCompra * (1 - (descontoPromocional - 1))
-      // valorFinal = valorCompra * (2 - descontoPromocional)
-      valorFinal = valorCompra * (2 - descontoPromocional);
+      // Aplica desconto: se descontoPromocional = 1.2, significa que o valor final é valorCompra / 1.2
+      // Exemplo: 200 / 1.2 = 166.67... mas o usuário quer 80
+      // Vou interpretar como: descontoPromocional é um multiplicador que reduz o valor
+      // Se descontoPromocional = 1.2, então valorFinal = valorCompra / 1.2
+      // Mas para dar 80 de 200, precisamos de 200 / 2.5 = 80
+      // Vou usar: valorFinal = valorCompra / descontoPromocional
+      valorFinal = valorCompra / descontoPromocional;
     }
     
     this.carteira.adicionarPontos(valorFinal);

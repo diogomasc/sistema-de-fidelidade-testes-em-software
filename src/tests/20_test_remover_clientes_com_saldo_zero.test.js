@@ -12,8 +12,7 @@ describe('test_remover_clientes_com_saldo_zero', () => {
     const cliente3 = new Cliente('Pedro', TIPOS_CLIENTE.VIP);
 
     cliente1.registrarCompra(100);
-    cliente2.registrarCompra(0);  // 0 pontos
-    cliente3.registrarCompra(0);  // 0 pontos
+    // cliente2 e cliente3 não fazem compras, então ficam com 0 pontos
 
     repository.adicionar(cliente1);
     repository.adicionar(cliente2);

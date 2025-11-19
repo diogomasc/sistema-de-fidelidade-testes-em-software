@@ -6,7 +6,7 @@ import { Cliente } from '../entities/Cliente.js';
 describe('test_nao_gerar_pontos_para_valor_zero', () => {
   it('não deve gerar pontos para valor zero', () => {
     const cliente = new Cliente('João', TIPOS_CLIENTE.PADRAO);
-    cliente.registrarCompra(0);
+    expect(() => cliente.registrarCompra(0)).toThrow('O valor da compra deve ser maior que zero');
     expect(cliente.consultarPontos()).toBe(0);
   });
 });

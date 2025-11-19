@@ -17,8 +17,8 @@ describe('test_buscar_cliente_por_nome', () => {
     expect(encontrado).toBe(cliente2);
     expect(encontrado.nome).toBe('Maria');
 
-    const naoEncontrado = repository.buscarPorNome('Pedro');
-    expect(naoEncontrado).toBeNull();
+    // Deve lançar erro ao buscar cliente inexistente
+    expect(() => repository.buscarPorNome('Pedro')).toThrow('Cliente não encontrado: Pedro');
   });
 });
 
