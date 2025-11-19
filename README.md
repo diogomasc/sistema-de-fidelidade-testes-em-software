@@ -20,25 +20,40 @@ Uma empresa precisa de um sistema para calcular e gerenciar pontos de fidelidade
 
 ## Estrutura do Projeto
 
-A arquitetura do projeto foi organizada para separar as responsabilidades, seguindo princípios do Domain-Driven Design (DDD) simplificado.
+A arquitetura foi organizada à luz de um **DDD enxuto**, priorizando a separação de responsabilidades e a rastreabilidade das regras de negócio. A ideia é que qualquer nova regra se concentre primeiro na camada de domínio (`entities`), seja orquestrada pelo repositório e validada pelos testes.
 
 ```bash
-src/
-├── entities/        # Entidades de domínio (Cliente, Carteira)
-├── repository/      # Padrão Repository para abstração de persistência
-├── consts/          # Constantes globais (tipos de cliente, taxas, etc.)
-└── tests/           # Testes unitários organizados por funcionalidade
+sistema-de-fedelidade/
+├── package.json
+├── README.md
+├── vitest.config.js
+└── src/
+    ├── consts/          # Léxico do domínio (tipos, multiplicadores, limites)
+    ├── entities/        # Modelos de domínio: Cliente agrega Carteira
+    ├── repository/      # Padrão Repository para orquestrar coleções em memória
+    ├── utils/           # Funções puras de validação e cálculo
+    └── tests/           # Testes unitários (23 oficiais + extras de exceções)
+```
+
+Fluxo de dependência (camadas externas apontam para o domínio):
+
+```mermaid
+flowchart TD
+    CONSTS[consts/] --> ENTITIES[entities/]
+    UTILS[utils/] --> ENTITIES
+    ENTITIES --> REPO[repository/]
+    REPO --> TESTS[tests/]
+    CONSTS --> TESTS
+    UTILS --> TESTS
 ```
 
 Componentes principais:
 
-- **entities/**: Classes de domínio que encapsulam regras de negócio
-  - `Cliente.js`: Representa um cliente do sistema
-  - `Carteira.js`: Gerencia os pontos de um cliente
-- **repository/**: Implementa o padrão Repository para gerenciar clientes em memória
-  - `ClienteRepository.js`: Operações CRUD e consultas sobre listas de clientes
-- **consts/**: Constantes do sistema (tipos de cliente, multiplicadores, etc.)
-- **tests/**: Suíte completa de testes unitários (25 testes, 100% de cobertura)
+- **`src/entities/`** — Núcleo do domínio. `Cliente` agrega `Carteira`, mantendo baixo acoplamento e permitindo evolução independente das regras de pontuação e das operações de carteira.
+- **`src/repository/`** — Implementa o padrão Repository. O `ClienteRepository` abstrai a persistência (in-memory), centraliza buscas, filtros, ordenações e mantém as coleções consistentes usando as próprias entidades.
+- **`src/utils/`** — Funções puras (cálculos e validações) compartilhadas entre entidades e repositório para sustentar o princípio de responsabilidade única.
+- **`src/consts/`** — Catálogo de elementos estáticos do domínio (tipos de cliente, multiplicadores, pontos de boas-vindas). Serve como “ubiquitous language” do projeto.
+- **`src/tests/`** — Suíte completa de testes unitários organizada por caso de uso. Todos os 23 testes obrigatórios foram isolados em arquivos individuais numerados, e arquivos extras cobrem cenários de exceção e regressões.
 
 ## Comandos Básicos
 
