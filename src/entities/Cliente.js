@@ -1,4 +1,5 @@
 import { Carteira } from './Carteira.js';
+import { calcularValorFinalComDesconto, validarDescontoPromocional } from '../utils/index.js';
 
 /**
  * Classe Cliente
@@ -27,13 +28,11 @@ export class Cliente {
     let valorFinal = valorCompra;
     
     if (descontoPromocional !== null) {
-      // Valida range do desconto: deve estar entre 0.01 e 1.0 (inclui 1.0 para produto grátis)
-      if (descontoPromocional <= 0 || descontoPromocional > 1.0) {
-        throw new Error('Desconto promocional deve estar entre 0.01 (1%) e 1.0 (100%)');
-      }
+      // Valida range do desconto usando função utilitária
+      validarDescontoPromocional(descontoPromocional);
       
-      // Calcula valor final com desconto: precoFinal = precoOriginal * (1 - taxaDeDesconto)
-      valorFinal = valorCompra * (1 - descontoPromocional);
+      // Calcula valor final com desconto usando função utilitária
+      valorFinal = calcularValorFinalComDesconto(valorCompra, descontoPromocional);
     }
     
     // Se o valor final for maior que zero, adiciona pontos (produto grátis não gera pontos)

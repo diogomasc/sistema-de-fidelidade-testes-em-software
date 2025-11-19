@@ -1,4 +1,5 @@
 import { MULTIPLICADOR_PONTOS } from '../consts/index.js';
+import { calcularPontosGanhos } from '../utils/index.js';
 
 /**
  * Classe Carteira
@@ -29,7 +30,7 @@ export class Carteira {
     }
 
     const multiplicador = this.calcularMultiplicador();
-    const pontosGanhos = valorCompra * multiplicador;
+    const pontosGanhos = calcularPontosGanhos(valorCompra, multiplicador);
     this.pontos += pontosGanhos;
   }
 
