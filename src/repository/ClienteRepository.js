@@ -78,12 +78,17 @@ export class ClienteRepository {
 
   /**
    * Remove clientes com saldo zero
-   * @returns {number} Quantidade de clientes removidos
+   * @returns {number} Quantidade de clientes que permaneceram no repositório
    */
   removerComSaldoZero() {
-    const quantidadeAntes = this.clientes.length;
-    this.clientes = this.clientes.filter(cliente => cliente.consultarPontos() > 0);
-    return quantidadeAntes - this.clientes.length;
+    const clientesComSaldoZero = this.clientes.filter(cliente => cliente.consultarPontos() === 0);
+    
+    // Remove cada cliente com saldo zero usando o método remover
+    clientesComSaldoZero.forEach(cliente => {
+      this.remover(cliente);
+    });
+    
+    return this.clientes.length;
   }
 
   /**

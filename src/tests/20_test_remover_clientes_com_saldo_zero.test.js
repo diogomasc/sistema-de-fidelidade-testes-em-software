@@ -18,10 +18,19 @@ describe('test_remover_clientes_com_saldo_zero', () => {
     repository.adicionar(cliente2);
     repository.adicionar(cliente3);
 
-    const removidos = repository.removerComSaldoZero();
-    expect(removidos).toBe(2);
-    expect(repository.listarTodos().length).toBe(1);
-    expect(repository.listarTodos()[0]).toBe(cliente1);
+    const quantidadeRestante = repository.removerComSaldoZero();
+    
+    // Verifica quantos clientes ficaram (deve ser 1)
+    expect(quantidadeRestante).toBe(1);
+    
+    // Verifica que apenas o cliente1 permaneceu
+    const clientesRestantes = repository.listarTodos();
+    expect(clientesRestantes.length).toBe(1);
+    expect(clientesRestantes[0]).toBe(cliente1);
+    
+    // Garante que cliente2 e cliente3 não estão mais na lista
+    expect(clientesRestantes).not.toContain(cliente2);
+    expect(clientesRestantes).not.toContain(cliente3);
   });
 });
 
