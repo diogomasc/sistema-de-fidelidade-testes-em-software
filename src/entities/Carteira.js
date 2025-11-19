@@ -48,5 +48,35 @@ export class Carteira {
 
     return pontosEfetivamenteResgatados;
   }
+
+  /**
+   * Adiciona pontos diretamente à carteira (sem cálculo por compra)
+   * @param {number} pontos - Quantidade de pontos a adicionar
+   */
+  adicionarPontosDiretos(pontos) {
+    if (pontos > 0) {
+      this.pontos += pontos;
+    }
+  }
+
+  /**
+   * Aplica um bônus multiplicando os pontos atuais
+   * @param {number} multiplicador - Multiplicador do bônus
+   */
+  aplicarBonus(multiplicador) {
+    if (multiplicador > 0) {
+      this.pontos = this.pontos * multiplicador;
+    }
+  }
+
+  /**
+   * Remove pontos da carteira (para expiração)
+   * @param {number} pontosRemover - Quantidade de pontos a remover
+   */
+  removerPontos(pontosRemover) {
+    if (pontosRemover > 0) {
+      this.pontos = Math.max(0, this.pontos - pontosRemover);
+    }
+  }
 }
 
