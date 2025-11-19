@@ -15,7 +15,7 @@ export class Carteira {
    * Calcula o multiplicador de pontos baseado no tipo de cliente
    * @returns {number} Multiplicador de pontos
    */
-  calcularMultiplicador() {
+  obterMultiplicador() {
     return MULTIPLICADOR_PONTOS[this.tipoCliente];
   }
 
@@ -29,7 +29,7 @@ export class Carteira {
       throw new Error('O valor da compra deve ser maior que zero');
     }
 
-    const multiplicador = this.calcularMultiplicador();
+    const multiplicador = this.obterMultiplicador();
     const pontosGanhos = calcularPontosGanhos(valorCompra, multiplicador);
     this.pontos += pontosGanhos;
   }
