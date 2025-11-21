@@ -1,5 +1,8 @@
-import { Carteira } from './Carteira.js';
-import { calcularValorFinalComDesconto, validarDescontoPromocional } from '../utils/index.js';
+import { Carteira } from "./Carteira.js";
+import {
+  calcularValorFinalComDesconto,
+  validarDescontoPromocional,
+} from "../utils/index.js";
 
 /**
  * Classe Cliente
@@ -22,19 +25,22 @@ export class Cliente {
   registrarCompra(valorCompra, descontoPromocional = null) {
     // Valida valor da compra antes de processar desconto
     if (valorCompra <= 0) {
-      throw new Error('O valor da compra deve ser maior que zero');
+      throw new Error("O valor da compra deve ser maior que zero");
     }
-    
+
     let valorFinal = valorCompra;
-    
+
     if (descontoPromocional !== null) {
       // Valida range do desconto usando função utilitária
       validarDescontoPromocional(descontoPromocional);
-      
+
       // Calcula valor final com desconto usando função utilitária
-      valorFinal = calcularValorFinalComDesconto(valorCompra, descontoPromocional);
+      valorFinal = calcularValorFinalComDesconto(
+        valorCompra,
+        descontoPromocional
+      );
     }
-    
+
     // Se o valor final for maior que zero, adiciona pontos (produto grátis não gera pontos)
     if (valorFinal > 0) {
       this.carteira.adicionarPontos(valorFinal);
@@ -68,7 +74,7 @@ export class Cliente {
   /**
    * Aplica bônus promocional na próxima compra (desconto)
    * @param {number} valorCompra - Valor da compra em reais
-   * @param {number} descontoPromocional - Desconto promocional (ex: 1.2 para 20% de desconto)
+   * @param {number} descontoPromocional - Desconto promocional (ex: 0.2 para 20% de desconto)
    */
   aplicarBonusPromocional(valorCompra, descontoPromocional) {
     this.registrarCompra(valorCompra, descontoPromocional);
@@ -82,4 +88,3 @@ export class Cliente {
     this.carteira.removerPontos(pontosExpirados);
   }
 }
-
