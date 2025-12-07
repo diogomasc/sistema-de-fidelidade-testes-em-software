@@ -1,4 +1,4 @@
-import { Carteira } from "./Carteira.js";
+
 import {
   calcularValorFinalComDesconto,
   validarDescontoPromocional,
@@ -10,10 +10,10 @@ import {
  * Encapsula as regras de negócio relacionadas ao cliente
  */
 export class Cliente {
-  constructor(nome, tipoCliente, pontosIniciais = 0) {
+  constructor(nome, tipoCliente, carteira) {
     this.nome = nome;
     this.tipoCliente = tipoCliente;
-    this.carteira = new Carteira(tipoCliente, pontosIniciais);
+    this.carteira = carteira;
   }
 
   /**
