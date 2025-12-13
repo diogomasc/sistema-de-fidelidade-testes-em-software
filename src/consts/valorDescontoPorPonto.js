@@ -1,0 +1,1 @@
+export const VALOR_DESCONTO_POR_PONTO = 0.05;

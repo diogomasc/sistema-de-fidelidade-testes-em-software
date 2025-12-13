@@ -9,12 +9,3 @@ export const TIPOS_CLIENTE = {
   VIP: 'VIP',
 };
 
-// Multiplicadores de pontos por tipo de cliente (pontos por R$1 gasto)
-export const MULTIPLICADOR_PONTOS = {
-  [TIPOS_CLIENTE.PADRAO]: 1.0,
-  [TIPOS_CLIENTE.PREMIUM]: 1.5,
-  [TIPOS_CLIENTE.VIP]: 2.0,
-};
-
-// Valor do desconto por ponto resgatado (em reais)
-export const VALOR_DESCONTO_POR_PONTO = 0.05;
