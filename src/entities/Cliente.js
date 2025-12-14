@@ -1,4 +1,4 @@
-
+import { Carteira } from "./Carteira.js";
 import {
   calcularValorFinalComDesconto,
   validarDescontoPromocional,
@@ -6,8 +6,7 @@ import {
 
 /**
  * Classe Cliente
- * Representa um cliente do sistema de fidelidade
- * Encapsula as regras de negócio relacionadas ao cliente
+ * Representa um cliente com comportamento de negócio.
  */
 export class Cliente {
   constructor(nome, tipoCliente, carteira) {
@@ -19,37 +18,29 @@ export class Cliente {
   /**
    * Registra uma compra e adiciona pontos à carteira
    * @param {number} valorCompra - Valor da compra em reais
-   * @param {number} [descontoPromocional] - Desconto promocional em decimal (ex: 0.1 para 10%, 0.2 para 20%, até 1.0 para 100% - produto grátis)
-   * @throws {Error} Se o desconto promocional estiver fora do range válido (0.01 a 1.0)
+   * @param {number} [descontoPromocional] - Desconto promocional em decimal
    */
   registrarCompra(valorCompra, descontoPromocional = null) {
-    // Valida valor da compra antes de processar desconto
-    if (valorCompra <= 0) {
-      throw new Error("O valor da compra deve ser maior que zero");
-    }
-
     let valorFinal = valorCompra;
 
     if (descontoPromocional !== null) {
-      // Valida range do desconto usando função utilitária
       validarDescontoPromocional(descontoPromocional);
-
-      // Calcula valor final com desconto usando função utilitária
       valorFinal = calcularValorFinalComDesconto(
         valorCompra,
         descontoPromocional
       );
     }
 
-    // Se o valor final for maior que zero, adiciona pontos (produto grátis não gera pontos)
-    if (valorFinal > 0) {
-      this.carteira.adicionarPontos(valorFinal);
+    if (valorFinal <= 0) {
+      throw new Error("O valor final da compra deve ser maior que zero");
     }
+
+    this.carteira.adicionarPontosPorCompra(valorFinal, this.tipoCliente);
   }
 
   /**
    * Consulta o total de pontos do cliente
-   * @returns {number} Total de pontos acumulados
+   * @returns {number}
    */
   consultarPontos() {
     return this.carteira.consultarPontos();
@@ -57,7 +48,7 @@ export class Cliente {
 
   /**
    * Resgata pontos para desconto
-   * @param {number} pontosResgatar - Quantidade de pontos a resgatar
+   * @param {number} pontosResgatar
    * @returns {number} Pontos efetivamente resgatados
    */
   resgatarPontos(pontosResgatar) {
@@ -66,23 +57,15 @@ export class Cliente {
 
   /**
    * Adiciona pontos de boas-vindas ao cliente
+   * @param {number} pontosBoasVindas
    */
   adicionarPontosBoasVindas(pontosBoasVindas) {
-    this.carteira.adicionarPontosDiretos(pontosBoasVindas);
-  }
-
-  /**
-   * Aplica bônus promocional na próxima compra (desconto)
-   * @param {number} valorCompra - Valor da compra em reais
-   * @param {number} descontoPromocional - Desconto promocional (ex: 0.2 para 20% de desconto)
-   */
-  aplicarBonusPromocional(valorCompra, descontoPromocional) {
-    this.registrarCompra(valorCompra, descontoPromocional);
+    this.carteira.adicionarPontos(pontosBoasVindas);
   }
 
   /**
    * Expira uma quantidade de pontos antigos
-   * @param {number} pontosExpirados - Quantidade de pontos a expirar
+   * @param {number} pontosExpirados
    */
   expirarPontos(pontosExpirados) {
     this.carteira.removerPontos(pontosExpirados);

@@ -1,37 +1,12 @@
-import { MULTIPLICADOR_PONTOS } from "../consts/index.js";
-import { calcularPontosGanhos } from "../utils/index.js";
+import { calcularPontosPorTipoCliente } from "../utils/index.js";
 
 /**
  * Classe Carteira
- * Encapsula a lógica de gerenciamento de pontos de um cliente
+ * Gerencia pontos com comportamento de negócio encapsulado.
  */
 export class Carteira {
-  constructor(tipoCliente, pontosIniciais = 0) {
-    this.tipoCliente = tipoCliente;
+  constructor(pontosIniciais = 0) {
     this.pontos = pontosIniciais;
-  }
-
-  /**
-   * Calcula o multiplicador de pontos baseado no tipo de cliente
-   * @returns {number} Multiplicador de pontos
-   */
-  obterMultiplicador() {
-    return MULTIPLICADOR_PONTOS[this.tipoCliente];
-  }
-
-  /**
-   * Adiciona pontos à carteira baseado no valor da compra
-   * @param {number} valorCompra - Valor da compra em reais
-   * @throws {Error} Se o valor da compra for menor ou igual a zero
-   */
-  adicionarPontos(valorCompra) {
-    if (valorCompra <= 0) {
-      throw new Error("O valor da compra deve ser maior que zero");
-    }
-
-    const multiplicador = this.obterMultiplicador();
-    const pontosGanhos = calcularPontosGanhos(valorCompra, multiplicador);
-    this.pontos += pontosGanhos;
   }
 
   /**
@@ -40,6 +15,40 @@ export class Carteira {
    */
   consultarPontos() {
     return this.pontos;
+  }
+
+  /**
+   * Adiciona pontos baseado no valor da compra e tipo de cliente
+   * @param {number} valorCompra - Valor da compra em reais
+   * @param {string} tipoCliente - Tipo do cliente (PADRAO, PREMIUM, VIP)
+   * @throws {Error} Se o valor da compra for menor ou igual a zero
+   */
+  adicionarPontosPorCompra(valorCompra, tipoCliente) {
+    if (valorCompra <= 0) {
+      throw new Error("O valor da compra deve ser maior que zero");
+    }
+
+    const pontosCalculados = calcularPontosPorTipoCliente(
+      valorCompra,
+      tipoCliente
+    );
+
+    this.pontos += pontosCalculados;
+  }
+
+  /**
+   * Adiciona pontos diretamente (ex: bônus, boas-vindas)
+   * @param {number} pontos - Quantidade de pontos a adicionar
+   * @throws {Error} Se os pontos forem menores ou iguais a zero
+   */
+  adicionarPontos(pontos) {
+    if (pontos <= 0) {
+      throw new Error(
+        "A quantidade de pontos a adicionar deve ser maior que zero"
+      );
+    }
+
+    this.pontos += pontos;
   }
 
   /**
@@ -68,20 +77,6 @@ export class Carteira {
   }
 
   /**
-   * Adiciona pontos diretamente à carteira (sem cálculo por compra)
-   * @param {number} pontos - Quantidade de pontos a adicionar
-   * @throws {Error} Se os pontos forem menores ou iguais a zero
-   */
-  adicionarPontosDiretos(pontos) {
-    if (pontos <= 0) {
-      throw new Error(
-        "A quantidade de pontos a adicionar deve ser maior que zero"
-      );
-    }
-    this.pontos += pontos;
-  }
-
-  /**
    * Remove pontos da carteira (para expiração)
    * @param {number} pontosRemover - Quantidade de pontos a remover
    * @throws {Error} Se os pontos a remover forem maiores que os disponíveis
@@ -98,6 +93,7 @@ export class Carteira {
         `Não é possível remover mais pontos do que o disponível. Pontos disponíveis: ${this.pontos}, pontos a remover: ${pontosRemover}`
       );
     }
+
     this.pontos -= pontosRemover;
   }
 }
