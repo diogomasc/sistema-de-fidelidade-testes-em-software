@@ -4,6 +4,5 @@
  * @returns {boolean} true se válido, false caso contrário
  */
 export function clienteExiste(cliente) {
-  return cliente !== null && cliente !== undefined;
+  return cliente != null;
 }
-

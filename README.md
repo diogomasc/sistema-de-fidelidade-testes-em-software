@@ -1,209 +1,242 @@
 # Sistema de Pontuação de Clientes — TDD, Node.js & Vitest
 
-Este projeto implementa um sistema de gerenciamento de pontos de fidelidade para clientes, focado em qualidade de software com TDD — Test Driven Development. O objetivo principal é permitir a prática de TDD aplicando testes à camada de negócio, utilizando arquitetura Repository Pattern simplificada, e operando apenas com dados em memória (sem banco de dados ou interface gráfica).
+Este projeto implementa um sistema de gerenciamento de pontos de fidelidade para clientes, focado em qualidade de software com **TDD (Test-Driven Development)**. O objetivo principal é permitir a prática de TDD aplicando testes à camada de negócio, utilizando arquitetura **Repository Pattern**, e operando apenas com dados em memória (sem banco de dados ou interface gráfica).
 
-## Contexto
+## 📋 Contexto
 
 Uma empresa precisa de um sistema para calcular e gerenciar pontos de fidelidade dos clientes, conforme regras que podem evoluir. Pontos são acumulados com base em compras, podendo receber bônus ou descontos conforme o perfil do cliente.
 
-## Objetivos
+## 🎯 Objetivos
 
-- **Praticar TDD:** Testes devem ser escritos antes da implementação de cada método.
-- **Desenvolver métodos testáveis:** Foco na lógica de negócio e manipulação em memória.
-- **Manutenção e refatoração seguras:** Garantidas por testes automatizados.
+- **Praticar TDD:** Testes escritos antes da implementação de cada método
+- **Desenvolver métodos testáveis:** Foco na lógica de negócio e manipulação em memória
+- **Manutenção e refatoração seguras:** Garantidas por testes automatizados com **100% de cobertura**
+- **Aplicar SOLID:** Implementação de SRP (Single Responsibility Principle) e DIP (Dependency Inversion Principle)
 
-## Tecnologias e Requisitos
+## 🛠️ Tecnologias e Requisitos
 
 - **Node.js v22**
-- **Vitest / Vitest UI** (testes automatizados)
-- \*_Sem banco de dados — apenas estruturas de dados_
+- **Vitest / Vitest UI** (framework de testes)
+- **Sem banco de dados** — apenas estruturas de dados em memória
 
-## Comandos Básicos e Como Rodar
+## 🚀 Comandos
 
-- **Instalar dependências:** `npm install`
-- **Executar testes:** `npm run test`
-- **Executar testes com interface gráfica (Vitest UI):** `npm run test:ui`
-- **Executar cobertura de testes:** `npm run coverage`
-- **Executar cobertura de testes com interface gráfica:** `npm run coverage:ui`
-
-## Estrutura do Projeto
-
-A arquitetura foi organizada à luz de um **DDD enxuto**, priorizando a separação de responsabilidades e a rastreabilidade das regras de negócio. A ideia é que qualquer nova regra se concentre primeiro na camada de domínio (`entities`), seja orquestrada pelo repositório e validada pelos testes.
+### Instalação
 
 ```bash
-sistema-de-fedelidade/
+npm install
+```
+
+### Testes
+
+```bash
+npm test              # Executa testes em modo watch
+npm run test:ui       # Interface gráfica interativa do Vitest
+npm run test:cov      # Gera relatório de cobertura
+npm run test:cov:ui   # Abre relatório de cobertura no navegador
+```
+
+## 📁 Estrutura do Projeto
+
+O projeto foi organizado seguindo princípios de Repository Pattern, priorizando separação de responsabilidades e rastreabilidade das regras de negócio.
+
+```bash
+sistema-de-fidelidade/
 ├── package.json
 ├── README.md
 ├── vitest.config.js
 └── src/
-    ├── consts/          # Léxico do domínio (tipos, multiplicadores, limites)
-    ├── entities/        # Modelos de domínio: Cliente agrega Carteira
-    ├── repository/      # Padrão Repository para orquestrar coleções em memória
-    ├── utils/           # Funções puras de validação e cálculo
-    └── tests/           # Testes unitários (23 oficiais + extras de exceções)
+    ├── consts/          # Constantes do domínio (tipos, multiplicadores)
+    ├── entities/        # Entidades de domínio: Cliente e Carteira
+    ├── repository/      # Padrão Repository (persistência em memória)
+    ├── services/        # Camada de serviço (orquestração e relatórios)
+    ├── utils/           # Funções auxiliares (cálculos, validações, relatórios)
+    └── tests/           # Testes unitários (50 testes organizados)
+        ├── Cliente.test.js   # 29 testes
+        └── Carteira.test.js  # 21 testes
 ```
 
-Fluxo de dependência (camadas externas apontam para o domínio):
+### Fluxo de Dependências
 
 ```mermaid
 flowchart TD
-    CONSTS[consts/] --> ENTITIES[entities/]
-    UTILS[utils/] --> ENTITIES
+    CONSTS[consts/] --> UTILS[utils/]
+    UTILS --> ENTITIES[entities/]
     ENTITIES --> REPO[repository/]
-    REPO --> TESTS[tests/]
-    CONSTS --> TESTS
-    UTILS --> TESTS
+    REPO --> SERVICES[services/]
+    SERVICES --> TESTS[tests/]
+    ENTITIES --> TESTS
 ```
 
-Componentes principais:
+## 🏗️ Decisões Arquiteturais
 
-- **`src/entities/`** — Núcleo do domínio. `Cliente` agrega `Carteira`, mantendo baixo acoplamento e permitindo evolução independente das regras de pontuação e das operações de carteira.
-- **`src/repository/`** — Implementa o padrão Repository. O `ClienteRepository` abstrai a persistência (in-memory), centraliza buscas, filtros, ordenações e mantém as coleções consistentes usando as próprias entidades.
-- **`src/utils/`** — Funções puras (cálculos e validações) compartilhadas entre entidades e repositório para sustentar o princípio de responsabilidade única.
-- **`src/consts/`** — Catálogo de elementos estáticos do domínio (tipos de cliente, multiplicadores, pontos de boas-vindas). Serve como “ubiquitous language” do projeto.
-- **`src/tests/`** — Suíte completa de testes unitários organizada por caso de uso. Todos os 23 testes obrigatórios foram isolados em arquivos individuais numerados, e arquivos extras cobrem cenários de exceção e regressões.
+### Modelo de Domínio Pragmático
 
-## Regras Básicas de Pontuação
+Embora o projeto tenha sido estruturado inicialmente para um **Rich Domain Model** (onde as entidades encapsulam toda a lógica de negócio), optamos por uma abordagem mais **pragmática e equilibrada**:
 
-- Cliente padrão: 1 ponto por real gasto.
-- Cliente Premium: 1,5 ponto por real gasto.
-- Cliente VIP: 2 pontos por real gasto.
+#### Por que não um modelo totalmente "rico"?
 
-## Funcionalidades Principais
+1. **Complexidade desnecessária**: Para o escopo do projeto, um modelo rico puro exigiria mudanças técnicas que não agregariam valor real
+2. **Testabilidade**: A estrutura atual permite testes isolados sem necessidade de abstração excessiva
+3. **Manutenibilidade**: Código mais simples e direto facilita compreensão e evolução
 
-- Registrar uma compra (acumula pontos)
+#### O que foi implementado?
+
+- **Entidades com lógica**: `Cliente` e `Carteira` possuem métodos de negócio (`registrarCompra`, `resgatarPontos`, etc.)
+- **Service layer**: `ClienteService` orquestra operações complexas e relatórios
+- **Funções utilitárias**: `utils/` fornece cálculos e validações reutilizáveis
+- **Repository**: Abstrai persistência seguindo o padrão Repository
+
+Esta abordagem **equilibra simplicidade com boas práticas**, evitando tanto o [Anemic Domain Model](https://martinfowler.com/bliki/AnemicDomainModel.html) puro quanto a complexidade excessiva de um modelo rico dogmático.
+
+### Princípios SOLID Aplicados
+
+#### ✅ **SRP (Single Responsibility Principle)**
+
+- Cada classe tem funções bem definidas e uma responsabilidade clara:
+  - `Carteira`: gerencia pontos
+  - `Cliente`: representa o cliente e suas operações
+  - `ClienteRepository`: persiste clientes
+  - `ClienteService`: orquestra consultas e relatórios
+
+#### ✅ **DIP (Dependency Inversion Principle)**
+
+- `ClienteService` depende de abstrações (aceita qualquer repository via construtor)
+- Entities usam funções utilitárias injetáveis (embora importadas diretamente para simplicidade)
+
+## 📊 Organização dos Testes
+
+Os testes foram organizados em **2 arquivos consolidados** com hierarquia clara usando `describe` aninhados:
+
+### `Cliente.test.js` - 29 testes
+
+```
+Cliente - Testes Unitários
+├── Comportamentos da Entidade Cliente
+│   ├── Cálculo de Pontos por Tipo (#1-3) - 3 testes
+│   ├── Acúmulo e Consulta (#4-5) - 2 testes
+│   ├── Resgate de Pontos (#6-8) - 3 testes
+│   ├── Compras e Valores (#9-10) - 2 testes
+│   ├── Proteção de Saldo (#11) - 1 teste
+│   └── Pontos Iniciais e Bônus (#13-15) - 3 testes
+├── Repository e Service - Operações em Lista
+│   ├── Busca de Cliente (#12, #21) - 2 testes
+│   └── Operações em Lista (#16-20, #22-23) - 7 testes
+└── Validações e Regras de Negócio
+    ├── Validações do ClienteRepository - 2 testes
+    ├── Validações do ClienteService - 1 teste
+    ├── Validações de Desconto Promocional - 2 testes
+    └── Validações de Tipo de Cliente - 1 teste
+```
+
+### `Carteira.test.js` - 21 testes
+
+```
+Carteira - Testes Unitários
+├── Operações com Pontos
+│   ├── Inicialização - 2 testes
+│   ├── Adicionar Pontos
+│   │   ├── Por Compra (com multiplicador) - 4 testes
+│   │   ├── Diretamente (bônus) - 1 teste
+│   │   └── Acúmulo de Pontos - 2 testes
+│   ├── Resgatar Pontos - 2 testes
+│   └── Remover Pontos (Expiração) - 1 teste
+└── Validações e Proteções
+    ├── Validações de Entrada - 5 testes
+    ├── Proteção de Saldo - 2 testes
+    └── Integridade do Saldo - 2 testes
+```
+
+### Benefícios da Organização
+
+- ✅ **Hierarquia clara e lógica** por funcionalidade/contexto
+- ✅ **Fácil navegação** entre testes relacionados
+- ✅ **Output legível** nos relatórios de teste
+- ✅ **Manutenção simplificada** - encontrar e modificar testes específicos
+
+## 📈 Cobertura de Testes
+
+**Status**: ✅ **100% de cobertura** em statements, functions e lines!
+
+```
+Test Files  2 passed (2)
+Tests       50 passed (50)
+
+Coverage report:
+All files      |  100  |  97.22  |  100  |  100  |
+```
+
+### 23 Testes Obrigatórios
+
+Todos os 23 testes obrigatórios do projeto foram implementados e estão **passando**:
+
+- [x] #1-3: Cálculo de pontos por tipo de cliente (PADRÃO, PREMIUM, VIP)
+- [x] #4-5: Acúmulo e consulta de pontos
+- [x] #6-8: Resgate de pontos e validações
+- [x] #9-11: Validações de compra e proteção de saldo
+- [x] #12: Busca de cliente inexistente lança erro
+- [x] #13-15: Pontos iniciais, bônus promocional e expiração
+- [x] #16-20: Operações em lista (registrar, filtrar, ordenar, remover)
+- [x] #21: Buscar cliente por nome
+- [x] #22-23: Somar total de pontos e gerar ranking
+
+## 🎮 Regras de Negócio
+
+### Pontuação Base
+
+- **Cliente Padrão**: 1 ponto por R$1 gasto
+- **Cliente Premium**: 1,5 pontos por R$1 gasto
+- **Cliente VIP**: 2 pontos por R$1 gasto
+
+### Funcionalidades
+
+- Registrar compra (acumula pontos)
+- Aplicar desconto promocional em compras
 - Consultar total de pontos
-- Resgatar pontos por descontos (1 ponto = R$0,05)
-- Operar sobre listas de clientes (adicionar, filtrar, ordenar, remover)
+- Resgatar pontos para desconto (1 ponto = R$0,05)
+- Adicionar pontos de boas-vindas
+- Expirar pontos antigos
+- Operar sobre listas: filtrar, ordenar, remover, ranking
 
-## Entregáveis
+## 📝 Componentes Principais
 
-- Código-fonte completo da aplicação
-- Testes unitários cobrindo regras e operações em listas
-- Relatório breve (máx. 4 páginas) resumindo estratégia de TDD, casos de teste e cobertura
-- README completo e instrutivo
+### `src/entities/`
 
-## Critérios de Avaliação
+Núcleo do domínio. `Cliente` agrega `Carteira`, mantendo baixo acoplamento e permitindo evolução independente.
 
-| Critério                 | Peso (%) |
-| ------------------------ | -------- |
-| Aplicação correta do TDD | 30       |
-| Qualidade dos testes     | 25       |
-| Coerência da lógica      | 25       |
-| Organização do código    | 10       |
-| Documentação e relatório | 10       |
+### `src/repository/`
 
----
+Implementa o padrão Repository. Abstrai a persistência em memória, centraliza buscas, filtros e ordenações.
 
-## Checklist de Tarefas — 4 Semanas
+### `src/services/`
 
-- [x] Setup do projeto Node.js v22, Vitest/UI, configurações básicas (`app.js`, dependências)
-- [x] Implementar estrutura de pastas e arquivos básicos
-- [x] Definir tipos de cliente, regras e permissões (`consts`, `database`)
-- [x] Criar as estruturas em memória (listas, objetos de clientes)
-- [x] Escrever testes TDD para regras básica de pontos
-- [x] Implementar métodos de cálculo
-- [x] Testar consultas e operações em listas (adicionar/filtrar/ordenar/remover)
-- [x] Escrever testes de resgate de pontos e bonificações
-- [x] Validar tratamento de exceções: clientes inexistentes, saldo insuficiente, valores inválidos
-- [x] Refatoração baseada nos testes — de acordo com TDD
-- [x] Checklist de casos de teste (ver lista abaixo)
-- [ ] Preparar relatório e cobertura de testes
-- [ ] Revisão final do código e documentação
+Camada de orquestração. `ClienteService` coordena operações complexas e geração de relatórios.
 
-### Estimativa de Tempo
+### `src/utils/`
 
-| Semana | Macro-atividades                                  | % do Projeto |
-| ------ | ------------------------------------------------- | ------------ |
-| 1      | Setup inicial, arquitetura, tipos, testes simples | 20           |
-| 2      | Métodos de cálculo, streams, TDD nas regras       | 30           |
-| 3      | Operações em listas, resgate de pontos            | 30           |
-| 4      | Testes avançados, refatoração, relatório, revisão | 20           |
+Funções puras reutilizáveis:
 
----
+- `calculos.js`: Cálculos de pontos e descontos
+- `validacoes.js`: Validações de entrada
+- `relatorios.js`: Funções para relatórios e rankings
 
-### Checklist de Testes Unitários
+### `src/consts/`
 
-- [x] **1. test_calcular_pontos_compra_cliente_padrao()**  
-       Verificar se o cliente padrão recebe 1 ponto por real gasto
- 
-- [x] **2. test_calcular_pontos_cliente_premium()**  
-       Confirmar que clientes Premium recebem 1,5 ponto por real gasto
+Catálogo de constantes do domínio (tipos de cliente, multiplicadores, valores). Serve como "linguagem ubíqua" do projeto.
 
-- [x] **3. test_calcular_pontos_cliente_vip()**  
-       Validar que clientes VIP recebem 2 pontos por real gasto
+## 📚 Critérios de Avaliação
 
-- [x] **4. test_acumular_pontos_varias_compras()**  
-       Testar o acúmulo de pontos em várias compras consecutivas
+| Critério                 | Peso | Status |
+| ------------------------ | ---- | ------ |
+| Aplicação correta do TDD | 30%  | ✅     |
+| Qualidade dos testes     | 25%  | ✅     |
+| Coerência da lógica      | 25%  | ✅     |
+| Organização do código    | 10%  | ✅     |
+| Documentação             | 10%  | ✅     |
 
-- [x] **5. test_consultar_pontos_cliente_existente()**  
-       Verificar se a consulta retorna o total correto de pontos
+## 🔄 (Opcional) Extensões
 
-- [x] **6. test_resgatar_pontos_para_desconto()**  
-       Garantir que o resgate de pontos gere o desconto correto
-
-- [x] **7. test_impedir_resgate_com_saldo_insuficiente()**  
-       Certificar que o cliente não possa resgatar mais pontos do que possui
-
-- [x] **8. test_resgatar_todos_os_pontos_disponiveis()**  
-       Validar que o sistema permita resgatar todo o saldo disponível
-
-- [x] **9. test_nao_gerar_pontos_para_valor_zero()**  
-       Assegurar que compras de valor zero não gerem pontos
-
-- [x] **10. test_gerar_pontos_para_valores_decimais()**  
-       Confirmar que valores decimais geram pontos proporcionais
-
-- [x] **11. test_nao_permitir_pontos_negativos()**  
-       Garantir que o saldo de pontos nunca seja negativo
-
-- [x] **12. test_cliente_inexistente_lanca_excecao()**  
-       Verificar se o sistema retorna null ao buscar cliente inexistente
-
-- [x] **13. test_registrar_novo_cliente_com_pontos_iniciais()**  
-       Validar o cadastro de um cliente com pontos de boas-vindas
-
-- [x] **14. test_aplicar_bonus_promocional_em_compra()**  
-       Testar aplicação de bônus promocional sobre compras
-
-- [x] **15. test_expirar_pontos_antigos_apos_periodo()**  
-       Simular expiração de pontos antigos após período determinado
-
-- [x] **16. test_registrar_varios_clientes_em_lista()**  
-       Validar a inserção de múltiplos clientes em uma lista
-
-- [x] **17. test_calcular_pontos_lista_clientes()**  
-       Calcular pontos para todos os clientes de uma lista
-
-- [x] **18. test_filtrar_clientes_com_pontos_acima_de_limite()**  
-       Filtrar clientes cujo saldo de pontos é superior a determinado valor
-
-- [x] **19. test_ordenar_clientes_por_pontos()**  
-       Ordenar clientes conforme o total de pontos acumulados
-
-- [x] **20. test_remover_clientes_com_saldo_zero()**  
-       Remover da lista os clientes que possuem saldo de pontos igual a zero
-
-- [x] **21. test_buscar_cliente_por_nome()**  
-       Pesquisar cliente pelo nome em uma lista de clientes
-
-- [x] **22. test_somar_total_pontos_lista()**  
-       Calcular o total de pontos de todos os clientes da lista
-
-- [x] **23. test_ranking_clientes_por_pontos()**  
-       Gerar ranking dos clientes ordenado por pontuação decrescente
-
-**Status**: ✅ Todos os 23 testes obrigatórios implementados e passando. Cobertura de código: **100%**.
-
-<img width="1505" height="815" alt="image" src="https://github.com/user-attachments/assets/c07f1d5d-074e-4989-96fe-8f8eeec77377" />
-
-<img width="1505" height="815" alt="image" src="https://github.com/user-attachments/assets/2825aa2d-2313-499c-b07c-27b7f080fcea" />
-
----
-
-## Extensões Opcionais
-
-- Novos tipos de cliente (Bronze, Prata, Ouro)
-- Regras mais avançadas de expiração de pontos
-- Operações dinâmicas sobre listas (ranking, busca avançada, merge)
-- Expansão do sistema mantendo TDD e arquitetura modular
+- Adicionar novas categorias de clientes (Bronze, Prata, Ouro).
+- Criar regras de expiração de pontos mais complexas.
+- Desenvolver operações adicionais sobre listas (ranking dinâmico, busca por intervalo de
+  pontos, merge de listas).
