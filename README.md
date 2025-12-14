@@ -158,13 +158,7 @@ Carteira - Testes Unitários
 
 **Status**: ✅ **100% de cobertura** em statements, functions e lines!
 
-```
-Test Files  2 passed (2)
-Tests       50 passed (50)
-
-Coverage report:
-All files      |  100  |  97.22  |  100  |  100  |
-```
+<img width="893" height="692" alt="image" src="https://github.com/user-attachments/assets/3518ce7a-8a0d-4577-b0ae-f5d0ea1ada4f" />
 
 ### 23 Testes Obrigatórios
 
