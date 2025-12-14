@@ -1,4 +1,4 @@
-import { TIPOS_CLIENTE } from './tiposCliente.js';
+import { TIPOS_CLIENTE } from "./tiposCliente.js";
 
 export const MULTIPLICADOR_PONTOS = {
   [TIPOS_CLIENTE.PADRAO]: 1.0,

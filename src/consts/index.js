@@ -4,4 +4,3 @@
 export * from "./tiposCliente.js";
 export * from "./multiplicadorPontos.js";
 export * from "./valorDescontoPorPonto.js";
-
