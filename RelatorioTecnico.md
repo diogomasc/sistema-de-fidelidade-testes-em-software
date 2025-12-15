@@ -52,7 +52,7 @@ O projeto passou por uma **refatoração completa** após identificação de des
 A **versão 2** (atual) adotou uma abordagem incremental genuinamente alinhada ao TDD:
 
 1. **Início simples:** Criação de entidades apenas com construtores e sem injeção de dependência
-2. **Anemic Domain Model inicial:** Seguindo conceito de Martin Fowler, concentrou-se toda lógica de negócio nas entidades, delegando operações CRUD ao repository conforme os testes evoluíam
+2. **Rich Domain Model inicial:** A lógica de negócio e as operações de criação/atualização ficaram inicialmente concentradas nas entidades (Cliente e Carteira), que expunham métodos de negócio e regras internas, enquanto o repositório ficou responsável apenas pelo CRUD em memória. Com o tempo, algumas operações mais complexas foram extraídas para ClienteService e funções em utils, aproximando o sistema de um modelo de domínio híbrido (parte rich nas entidades, parte anêmico nos services).
 3. **Refatoração orientada por testes:** À medida que grupos de testes eram criados, entidades e repositories foram refatorados com novas exceções, que posteriormente evoluíram para operações separadas em `utils/`
 4. **Melhoria de qualidade opcional:** Com mentoria técnica, o sistema foi refatorado para respeitar o **Princípio de Inversão de Dependência**, removendo dependências diretas do construtor da `Carteira` na classe `Cliente`, e introduzindo um service para operações menores
 
